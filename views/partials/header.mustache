@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DanceHub</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="/css/about.css">
+  <link rel="stylesheet" href="/css/courses.css">
+  <link rel="stylesheet" href="/css/course-details.css">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="navbar">
+      <div class="nav-left">
+        <a href="/dashboard" class="logo">DanceHub</a>
+      </div>
+
+      <div class="nav-toggle" id="navToggle">&#9776;</div>
+
+      <div class="nav-right" id="navRight">
+        <a href="/dashboard" class="nav-link {{#dashboardActive}}active{{/dashboardActive}}">Home</a>
+        <a href="/courses" class="nav-link {{#coursesActive}}active{{/coursesActive}}">Courses</a>
+        <a href="/about" class="nav-link {{#aboutActive}}active{{/aboutActive}}">About</a>
+
+        {{#isOrganiser}}
+          <a href="/dashboard/manage-organisers" class="nav-link">Manage Organisers</a>
+          <a href="/logout" class="nav-auth">Logout</a>
+        {{/isOrganiser}}
+
+        {{^isOrganiser}}
+          <button class="nav-auth" id="login-toggle">Organiser Login</button>
+          <div id="login-popper" class="login-popper">
+            <form method="POST" action="/login" class="login-form" id="login-form">
+              <input name="username" placeholder="Username" required />
+              <input name="password" type="password" placeholder="Password" required />
+              <button type="submit">Login</button>
+              <p id="login-error" class="error-msg"></p>
+            </form>
+          </div>
+        {{/isOrganiser}}
+      </div>
+    </nav>
+  </header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const navToggle = document.getElementById('navToggle');
+    const navRight = document.getElementById('navRight');
+
+    navToggle?.addEventListener('click', () => {
+      navRight?.classList.toggle('show');
+    });
+
+    const loginBtn = document.getElementById('login-toggle');
+    const loginPopper = document.getElementById('login-popper');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+
+    function togglePopper(popper) {
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        popper.classList.toggle('mobile-slide');
+      } else {
+        const isVisible = popper.style.display === 'block';
+        popper.style.display = isVisible ? 'none' : 'block';
+      }
+    }
+
+    loginBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      togglePopper(loginPopper);
+    });
+
+    loginForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.textContent = '';
+
+      const formData = Object.fromEntries(new FormData(loginForm).entries());
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await res.json();
+        if (result.success) {
+          window.location.href = '/dashboard';
+        } else {
+          loginError.textContent = result.error;
+        }
+      } catch (err) {
+        loginError.textContent = 'Login failed.';
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      if (
+        loginPopper &&
+        !loginPopper.contains(e.target) &&
+        !loginBtn?.contains(e.target)
+      ) {
+        loginPopper.style.display = 'none';
+        loginPopper.classList.remove('mobile-slide');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        loginPopper.style.display = 'none';
+        loginPopper.classList.remove('mobile-slide');
+      }
+    });
+  });
+</script>
+
+

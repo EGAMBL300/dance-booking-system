@@ -1,0 +1,426 @@
+{{> header }}
+
+<div class="course-details-page">
+  {{#bookingStatus}}
+    <div class="booking-message {{bookingStatus}}">
+      {{#isBookingSuccess}}🎉 Booking confirmed!{{/isBookingSuccess}}
+      {{#isBookingExists}}You’ve already booked this class.{{/isBookingExists}}
+      {{#isBookingError}}Something went wrong. Please try again.{{/isBookingError}}
+    </div>
+  {{/bookingStatus}}
+
+  <div class="course-header">
+    <h1>{{course.title}}</h1>
+
+    {{^isOrganiser}}
+      <button id="openEnrolModal" class="button small">Enrol in Entire Course</button>
+    {{/isOrganiser}}
+    
+    {{#isOrganiser}}
+      <div class="course-actions">
+        <button id="toggleEditCourse" class="button small">Edit Course</button>
+        <form method="POST" action="/dashboard/courses/{{course._id}}/delete" onsubmit="return confirm('Are you sure you want to delete this course?');" style="display: inline;">
+          <button type="submit" class="button small danger">Delete Course</button>
+        </form>
+      </div>
+    {{/isOrganiser}}
+
+  </div>
+
+  <div class="course-meta">
+    <img class="course-banner" src="{{course.image}}" alt="{{course.title}}" id="course-banner-img" />
+
+    <!-- View Mode -->
+    <div class="course-info" id="course-view">
+      <p><strong>Description:</strong> {{course.description}}</p>
+      <p><strong>Duration:</strong> {{course.duration}}</p>
+      <p><strong>Type:</strong> {{course.type}}</p>
+      <p><strong>Location:</strong> {{course.location}}</p>
+    </div>
+
+    <!-- Edit Mode -->
+    {{#isOrganiser}}
+        <form method="POST" action="/dashboard/courses/{{course._id}}/edit" enctype="multipart/form-data" id="course-edit-form" style="display: none;">
+        <div class="form-group">
+            <label for="edit-title">Course Title</label>
+            <input id="edit-title" name="title" type="text" value="{{course.title}}" required />
+        </div>
+        <div class="form-group">
+            <label for="edit-description">Description</label>
+            <input id="edit-description" name="description" type="text" value="{{course.description}}" required />
+        </div>
+        <div class="form-group">
+            <label for="edit-type">Type</label>
+            <input id="edit-type" name="type" type="text" value="{{course.type}}" required />
+        </div>
+        <div class="form-group">
+            <label for="edit-duration">Duration</label>
+            <input id="edit-duration" name="duration" type="text" value="{{course.duration}}" required />
+        </div>
+        <div class="form-group">
+            <label for="edit-location">Location</label>
+            <input id="edit-location" name="location" type="text" value="{{course.location}}" required />
+        </div>
+        <div class="form-group">
+            <label for="edit-image">Cover Image</label>
+            <input id="edit-image" name="courseImage" type="file" accept="image/*" />
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="button small">Save Changes</button>
+            <button type="button" id="cancelEditCourse" class="button small secondary">Cancel</button>
+        </div>
+        </form>
+    {{/isOrganiser}}
+
+  </div>
+
+  <div class="class-section">
+    <div class="class-section-header">
+      <h2>Available Classes</h2>
+        {{#isOrganiser}}
+            <button class="button small" id="toggleAddClass">+ Add Class</button>
+        {{/isOrganiser}}
+    </div>
+
+    {{#isOrganiser}}
+        <div id="add-class-form" class="add-class-form" style="display: none;">
+            <h3>Add New Class</h3>
+            <form method="POST" action="/dashboard/courses/{{course._id}}/classes/add">
+                <div class="form-row">
+                <div class="form-group">
+                    <label for="class-date">Date</label>
+                    <input id="class-date" name="date" type="date" required />
+                </div>
+                <div class="form-group">
+                    <label for="class-time">Time</label>
+                    <input id="class-time" name="time" type="time" required />
+                </div>
+                </div>
+                <div class="form-group">
+                  <label for="class-description">Description</label>
+                  <textarea id="class-description" name="description" placeholder="What will be taught in this class?" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="class-location">Location</label>
+                  <input id="class-location" name="location" placeholder="Location" required />
+                </div>
+                <div class="form-group">
+                  <label for="class-price">Price (£)</label>
+                  <input id="class-price" name="price" type="number" step="0.01" required />
+                </div>
+                <button type="submit" class="button small">Add Class</button>
+            </form>
+        </div>
+
+    {{/isOrganiser}}
+
+    {{#classes.length}}
+      <ul class="class-list">
+        {{#classes}}
+          <li class="class-item" data-class-id="{{_id}}">
+            <!-- View Mode -->
+            <div class="class-view">
+              <div class="class-info">
+                <p><strong>Date:</strong> {{date}}</p>
+                <p><strong>Time:</strong> {{time}}</p>
+                <p><strong>Location:</strong> {{location}}</p>
+                <p><strong>Description:</strong> {{description}}</p>
+                <p><strong>Price:</strong> £{{price}}</p>
+              </div>
+
+              {{#isOrganiser}}
+                <div class="class-actions">
+                  <button class="button small toggle-edit-class" data-class-id="{{_id}}">Edit</button>
+                  <a href="/dashboard/classes/{{_id}}/delete" class="button small danger" onclick="return confirm('Delete this class?');">Delete</a>
+                  <button class="button small secondary view-attendees-btn" data-class-id="{{_id}}">View Attendees</button>
+                </div>
+              {{/isOrganiser}}
+
+              {{^isOrganiser}}
+                <button class="button small book-btn" data-class-id="{{_id}}">Book</button>
+              {{/isOrganiser}}
+            </div>
+
+            <!-- Edit Mode -->
+            <form class="edit-class-form" method="POST" action="/dashboard/classes/{{_id}}/edit" style="display: none;">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="edit-date-{{_id}}">Date</label>
+                  <input type="date" id="edit-date-{{_id}}" name="date" value="{{date}}" required />
+                </div>
+                <div class="form-group">
+                  <label for="edit-time-{{_id}}">Time</label>
+                  <input type="time" id="edit-time-{{_id}}" name="time" value="{{time}}" required />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-description-{{_id}}">Description</label>
+                <textarea id="edit-description-{{_id}}" name="description" required>{{description}}</textarea>
+              </div>
+              <div class="form-group">
+                <label for="edit-location-{{_id}}">Location</label>
+                <input type="text" id="edit-location-{{_id}}" name="location" value="{{location}}" required />
+              </div>
+              <div class="form-group">
+                <label for="edit-price-{{_id}}">Price (£)</label>
+                <input type="number" id="edit-price-{{_id}}" name="price" step="0.01" value="{{price}}" required />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="button small">Save Changes</button>
+                <button type="button" class="button small secondary cancel-edit-class" data-class-id="{{_id}}">Cancel</button>
+              </div>
+            </form>
+          </li>
+
+
+        {{/classes}}
+      </ul>
+
+    {{/classes.length}}
+
+    {{^classes.length}}
+      <p class="no-classes">No classes scheduled yet.</p>
+    {{/classes.length}}
+  </div>
+
+  <div class="back-link">
+    <a href="/courses" class="button secondary">← Back to Courses</a>
+  </div>
+</div>
+
+<div id="booking-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeBookingModal">&times;</span>
+    <h3>Book This Class</h3>
+    <form method="POST" action="/book">
+      <input type="hidden" name="courseId" value="{{course._id}}" />
+      <input type="hidden" name="classId" id="bookingClassId" />
+      <div class="form-group">
+        <label for="bookingName">Name</label>
+        <input type="text" id="bookingName" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="bookingEmail">Email</label>
+        <input type="email" id="bookingEmail" name="email" required />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="button small">Confirm Booking</button>
+        <button type="button" class="button small secondary" id="cancelBooking">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="enrol-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeEnrolModal">&times;</span>
+    <h3>Enrol in All Classes</h3>
+    <form method="POST" action="/courses/{{course._id}}/enrol">
+      <input type="hidden" name="courseId" value="{{course._id}}" />
+      <div class="form-group">
+        <label for="enrolName">Name</label>
+        <input type="text" id="enrolName" name="name" required />
+      </div>
+      <div class="form-group">
+        <label for="enrolEmail">Email</label>
+        <input type="email" id="enrolEmail" name="email" required />
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="button small">Confirm Enrolment</button>
+        <button type="button" class="button small secondary" id="cancelEnrol">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="attendees-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="closeAttendeesModal">&times;</span>
+    <h3>Class Attendees</h3>
+    <div id="attendees-content">
+      <p>Loading attendees...</p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+  const toggleEditBtn = document.getElementById('toggleEditCourse');
+  const cancelEditBtn = document.getElementById('cancelEditCourse');
+  const viewSection = document.getElementById('course-view');
+  const editForm = document.getElementById('course-edit-form');
+
+  toggleEditBtn?.addEventListener('click', () => {
+    editForm.style.display = 'block';
+    viewSection.style.display = 'none';
+    toggleEditBtn.style.display = 'none';
+  });
+
+  cancelEditBtn?.addEventListener('click', () => {
+    editForm.style.display = 'none';
+    viewSection.style.display = 'block';
+    toggleEditBtn.style.display = 'inline-block';
+  });
+
+  document.getElementById('toggleAddClass')?.addEventListener('click', () => {
+    const form = document.getElementById('add-class-form');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  });
+
+  const modal = document.getElementById('booking-modal');
+  const closeBtn = document.getElementById('closeBookingModal');
+  const cancelBtn = document.getElementById('cancelBooking');
+  const classIdInput = document.getElementById('bookingClassId');
+
+  document.querySelectorAll('.book-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const classId = button.getAttribute('data-class-id');
+      classIdInput.value = classId;
+      modal.classList.add('visible');
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('visible');
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    modal.classList.remove('visible');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('visible');
+    }
+  });
+
+  const params = new URLSearchParams(window.location.search);
+  const editMode = params.get("edit") === "true";
+
+  if (editMode && toggleEditBtn && editForm && viewSection) {
+    editForm.style.display = 'block';
+    viewSection.style.display = 'none';
+    toggleEditBtn.style.display = 'none';
+  }
+
+  document.querySelectorAll('.toggle-edit-class').forEach(button => {
+    button.addEventListener('click', () => {
+      const classId = button.dataset.classId;
+      const classItem = document.querySelector(`.class-item[data-class-id="${classId}"]`);
+      const view = classItem.querySelector('.class-view');
+      const form = classItem.querySelector('.edit-class-form');
+
+      view.style.display = 'none';
+      form.style.display = 'block';
+    });
+  });
+
+  document.querySelectorAll('.cancel-edit-class').forEach(button => {
+    button.addEventListener('click', () => {
+      const classId = button.dataset.classId;
+      const classItem = document.querySelector(`.class-item[data-class-id="${classId}"]`);
+      const view = classItem.querySelector('.class-view');
+      const form = classItem.querySelector('.edit-class-form');
+
+      form.style.display = 'none';
+      view.style.display = 'flex';
+    });
+  });
+
+  const enrolModal = document.getElementById('enrol-modal');
+  const openEnrolBtn = document.getElementById('openEnrolModal');
+  const closeEnrolBtn = document.getElementById('closeEnrolModal');
+  const cancelEnrolBtn = document.getElementById('cancelEnrol');
+
+  openEnrolBtn?.addEventListener('click', () => {
+    enrolModal.classList.add('visible');
+  });
+
+  closeEnrolBtn?.addEventListener('click', () => {
+    enrolModal.classList.remove('visible');
+  });
+
+  cancelEnrolBtn?.addEventListener('click', () => {
+    enrolModal.classList.remove('visible');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === enrolModal) {
+      enrolModal.classList.remove('visible');
+    }
+  });
+
+  const attendeesModal = document.getElementById('attendees-modal');
+  const closeAttendeesBtn = document.getElementById('closeAttendeesModal');
+  const attendeesContent = document.getElementById('attendees-content');
+
+  document.querySelectorAll('.view-attendees-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const classId = button.dataset.classId;
+      attendeesContent.innerHTML = '<p>Loading attendees...</p>';
+      attendeesModal.classList.add('visible');
+
+      fetch(`/classes/${classId}/attendees/json`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.bookings.length) {
+            attendeesContent.innerHTML = '<p>No attendees yet.</p>';
+            return;
+          }
+
+          attendeesContent.innerHTML = `
+            <ul class="attendee-list">
+              ${data.bookings.map(b => `
+                <li>
+                  <strong>${b.name}</strong> — <em>${b.email}</em>
+                  <button class="button small danger remove-attendee-btn" data-class-id="${classId}" data-email="${b.email}">Remove</button>
+                </li>
+              `).join('')}
+            </ul>
+          `;
+
+          setTimeout(() => {
+            document.querySelectorAll('.remove-attendee-btn').forEach(button => {
+              button.addEventListener('click', () => {
+                const classId = button.dataset.classId;
+                const email = button.dataset.email;
+
+                fetch(`/classes/${classId}/attendees/remove`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ email }),
+                })
+                  .then(res => res.json())
+                  .then(result => {
+                    if (result.success) {
+                      button.parentElement.remove(); // Remove attendee from list
+                    } else {
+                      alert('Failed to remove attendee.');
+                    }
+                  })
+                  .catch(() => alert('Error removing attendee.'));
+              });
+            });
+          }, 0);
+        })
+        .catch(() => {
+          attendeesContent.innerHTML = '<p>Failed to load attendees.</p>';
+        });
+    });
+  });
+
+  closeAttendeesBtn?.addEventListener('click', () => {
+    attendeesModal.classList.remove('visible');
+  });
+
+  window.addEventListener('click', (e) => {
+    if (e.target === attendeesModal) {
+      attendeesModal.classList.remove('visible');
+    }
+  });
+
+
+
+</script>

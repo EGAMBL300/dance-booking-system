@@ -1,0 +1,78 @@
+{{> header }}
+
+<div class="content-container">
+  <div class="page-header">
+    <h1 class="page-title">Manage Organisers</h1>
+    <p class="page-subtitle">Register new organisers and manage existing ones.</p>
+  </div>
+
+  <div class="register-organiser-section">
+    <h2>Register New Organiser</h2>
+    <form method="POST" id="register-form" class="form-inline">
+      <input name="username" placeholder="Username" required />
+      <input name="password" type="password" placeholder="Password" required />
+      <input type="hidden" name="role" value="organiser" />
+      <button type="submit" class="button small">Register</button>
+      <p id="register-error" class="error-msg"></p>
+    </form>
+  </div>
+
+  <div class="table-wrapper">
+    <h2>Current Organisers</h2>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#organisers}}
+          <tr>
+            <td>{{username}}</td>
+            <td>
+              {{^isCurrentUser}}
+                <form method="POST" action="/dashboard/organisers/{{_id}}/delete" onsubmit="return confirm('Are you sure you want to delete this organiser?');" style="display:inline;">
+                  <button type="submit" class="button small danger">Delete</button>
+                </form>
+              {{/isCurrentUser}}
+              {{#isCurrentUser}}
+                <span class="badge">You</span>
+              {{/isCurrentUser}}
+            </td>
+          </tr>
+        {{/organisers}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="back-link">
+    <a href="/dashboard" class="button secondary">← Back to Dashboard</a>
+  </div>
+</div>
+
+<script>
+  document.getElementById('register-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorMsg = document.getElementById('register-error');
+    errorMsg.textContent = '';
+    const formData = Object.fromEntries(new FormData(e.target).entries());
+
+    try {
+      const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        location.reload();
+      } else {
+        errorMsg.textContent = result.error;
+      }
+    } catch (err) {
+      errorMsg.textContent = 'Registration failed.';
+    }
+  });
+</script>

@@ -1,0 +1,36 @@
+{{> header }}
+
+<div class="about-container">
+  <div class="intro-section">
+    <h1 class="about-title">{{title}}</h1>
+    <p class="about-overview">{{overviewText}}</p>
+  </div>
+
+  <div class="info-section">
+    <h2>What We Offer</h2>
+    <p>At DanceHub, we deliver dynamic and inclusive dance classes suitable for all skill levels, from complete beginners to advanced dancers. Whether you're looking to boost your confidence, meet new people, or train professionally, we’ve got a course tailored for you.</p>
+  </div>
+
+  <div class="info-section">
+    <h2>Types of Classes</h2>
+    <ul class="class-list">
+      <li>🕺 Weekly Evening Classes</li>
+      <li>💃 Weekend Intensive Workshops</li>
+      <li>🎓 Beginner & Foundation Courses</li>
+      <li>🎭 Performance and Competition Training</li>
+    </ul>
+  </div>
+
+  <div class="info-section">
+    <h2>Our Locations</h2>
+    <ul class="location-list">
+      {{#locations}}
+        <li>📍 {{.}}</li>
+      {{/locations}}
+    </ul>
+  </div>
+
+  <div class="centered">
+    <a href="/courses" class="button">View Courses</a>
+  </div>
+</div>

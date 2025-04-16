@@ -1,0 +1,269 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #fdfdfd;
+  }
+  
+  header, nav {
+    color: black;
+    padding: 10px;
+  }
+  
+  nav a {
+    color: black;
+    margin-right: 10px;
+    text-decoration: none;
+  }
+
+  .site-header {
+    background-color: #f4f4f4;
+    padding: 12px 20px;
+  }
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-left .logo {
+    font-size: 1.7rem;
+    font-weight: 400;
+    color: #2a193e;
+    text-decoration: none;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .nav-link {
+    color: black;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #dcdcdc;
+  }
+
+  nav a.nav-auth {
+    margin-left: 8px;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 14px;
+    background-color: #1976d2;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+  }
+
+  nav button.nav-auth {
+    margin-left: 8px;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 14px;
+    background-color: #1976d2;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  nav a.nav-auth:hover {
+    background-color: #0d47a1;
+  }
+
+  nav button.nav-auth:hover {
+    background-color: #0d47a1;
+  }
+  
+  .welcome {
+    color: #fff;
+    margin-right: 10px;
+  }
+
+  .nav-link.active {
+    font-weight: bold;
+    background-color: white;
+    color: #1976d2;
+  }
+
+  .nav-link.active:hover {
+    font-weight: bold;
+    background-color: rgb(225, 225, 225);
+    color: #1976d2;
+  }
+  
+  .login-popper {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 12px 16px;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  .error-msg {
+    color: red;
+    margin-top: 8px;
+    font-size: 0.9rem;
+  }  
+  
+  .login-form input {
+    display: block;
+    width: 200px;
+    padding: 6px 10px;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .login-form button {
+    padding: 6px 12px;
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .login-form button:hover {
+    background: #135bb0;
+  }
+  
+  .auth-popper {
+    position: absolute;
+    right: 20px;
+    top: 60px;
+    background: white;
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+  }
+  
+  .auth-form input {
+    display: block;
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 200px;
+  }
+  
+  .auth-form .error-msg {
+    color: red;
+    font-size: 0.9rem;
+  }
+
+  .auth-form button {
+    padding: 6px 12px;
+    background: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .auth-form button:hover {
+    background: #135bb0;
+  }
+  
+  .content-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .page-subtitle {
+    color: #666;
+  }
+  
+  .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+  
+  .styled-table th,
+  .styled-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .styled-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  .badge {
+    padding: 0.3rem 0.6rem;
+    background-color: #ddd;
+    font-size: 0.85rem;
+    border-radius: 4px;
+  }
+  
+  .no-data-message {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+    margin-bottom: 2rem;
+  }
+  
+  /* Mobile header adjustments */
+.nav-toggle {
+  display: none;
+  font-size: 24px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* When screen width is 768px or less */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle {
+    display: block;
+    margin-left: auto;
+  }
+
+  .nav-right {
+    flex-direction: column;
+    width: 100%;
+    display: none;
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .nav-right.show {
+    display: flex;
+  }
+
+  .login-popper,
+  .auth-popper {
+    right: 10px;
+    top: 100%;
+  }
+}

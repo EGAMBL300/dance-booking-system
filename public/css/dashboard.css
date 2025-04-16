@@ -1,0 +1,310 @@
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  
+  .welcome-text {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.4rem;
+    color: #666;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  
+  .carousel-wrapper {
+    position: relative;
+    overflow: hidden;
+    margin: 30px auto;
+  }
+  
+  .carousel-container {
+    overflow: hidden;
+    padding: 30px 60px;
+  }
+  
+  .carousel-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.5s ease-in-out;
+  }  
+  
+  .carousel-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    min-width: 260px;
+    max-width: 260px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+  }
+  
+  .carousel-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .carousel-card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  
+  .carousel-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  
+  .carousel-card-body h3 {
+    font-size: 1.1rem;
+    margin: 0 0 8px;
+    color: #222;
+  }
+  
+  .carousel-description {
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: auto;
+  }
+  
+  .carousel-actions {
+    margin-top: 16px;
+  }
+  
+  .button.small.purple {
+    background-color: #8e44ad;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .button.small.purple:hover {
+    background-color: #732d91;
+  }
+  
+  .arrow {
+    font-size: 1rem;
+  }
+  
+  
+  .carousel-students {
+    font-size: 0.9rem;
+    color: #888;
+    margin-top: 6px;
+  }
+  
+  .button.small {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  .button.small:hover {
+    background-color: #135bb0;
+  }
+  
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #f0f0f0;
+    color: #444;
+    border: none;
+    font-size: 1.5rem;
+    padding: 8px 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  
+  .carousel-btn:hover {
+    background: #ddd;
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  
+  .carousel-btn.prev {
+    left: 0;
+  }
+  
+  .carousel-btn.next {
+    right: 0;
+  }
+  
+  .carousel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 30px;
+    border-bottom: 1px solid rgb(178, 178, 178);
+  }
+  
+  .button {
+    background: #1976d2;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s ease;
+  }
+  
+  .button:hover {
+    background: #135bb0;
+  }
+
+  @media screen and (min-width: 769px) {
+    .nav-toggle {
+      display: none;
+    }
+  }
+  
+  @media screen and (max-width: 768px) {
+    .nav-right {
+      display: none;
+      flex-direction: column;
+      background-color: #f4f4f4;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      left: 0;
+      padding: 16px;
+      z-index: 1000;
+    }
+  
+    .nav-right.show {
+      display: flex;
+    }
+  
+    .nav-toggle {
+      display: block;
+      font-size: 1.8rem;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+
+    .carousel-container {
+      padding: 10px;
+    }
+  
+    .carousel-card {
+      min-width: 80%;
+      max-width: 80%;
+    }
+  
+    .carousel-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      padding-bottom: 10px;
+    }    
+  
+    .carousel-btn {
+      font-size: 1.2rem;
+      padding: 6px 10px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      text-align: left;
+    }
+  
+    .dashboard-container {
+      padding: 20px 10px;
+    }
+
+    .button, .button.small {
+      font-size: 0.9rem;
+      padding: 8px 12px;
+    }
+  
+    .hero-title {
+      font-size: 1.8rem;
+      margin-bottom: 0.3rem;
+    }
+  
+    .hero-subtitle {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+  
+    .login-popper {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100vw;
+      height: auto;
+      background-color: #ffffff;
+      z-index: 2000;
+      padding: 24px 16px;
+      display: none;
+      border-radius: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-sizing: border-box;
+      transform: translateY(-100%);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+  
+    .login-popper.mobile-slide {
+      display: block !important;
+      transform: translateY(0);
+      opacity: 1;
+    }
+  
+    .login-form {
+      max-width: 400px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+  
+    .login-form input,
+    .login-form button {
+      padding: 12px;
+      font-size: 1rem;
+      margin: 0 auto;
+    }
+  
+    .error-msg {
+      color: red;
+      text-align: center;
+    }
+    
+  }
+  
+  

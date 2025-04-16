@@ -1,0 +1,138 @@
+{{> header }}
+
+<div class="courses-page">
+  <h1 class="section-title">Course Catalogue</h1>
+
+  {{#isOrganiser}}
+    <div class="add-course-wrapper">
+      <button class="add-course-button" id="toggleAddCourse" type="button">+ Add New Course</button>
+      <div id="add-course-form" class="add-course-form" style="display: none;">
+        <h3>Add New Course</h3>
+        <form method="POST" action="/dashboard/add-course" enctype="multipart/form-data">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="course-title">Course Title</label>
+              <input id="course-title" type="text" name="title" required />
+            </div>
+            <div class="form-group">
+              <label for="course-type">Type</label>
+              <input id="course-type" type="text" name="type" required placeholder="e.g. Weekly" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="course-duration">Duration</label>
+              <input id="course-duration" type="text" name="duration" required placeholder="e.g. 6 weeks" />
+            </div>
+            <div class="form-group">
+              <label for="course-location">Location</label>
+              <input id="course-location" type="text" name="location" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="course-description">Description</label>
+            <input id="course-description" type="text" name="description" required />
+          </div>
+
+          <div class="form-group">
+            <label for="courseImage">Cover Image</label>
+            <input id="courseImage" type="file" name="courseImage" accept="image/*" required />
+          </div>
+
+          <button type="submit" class="button small">Add Course</button>
+        </form>
+      </div>
+    </div>
+  {{/isOrganiser}}
+
+  <div class="sort-bar">
+    <label for="sort-select">Sort by:</label>
+    <select id="sort-select">
+      <option value="default">A–Z (Course Name)</option>
+      <option value="upcoming">Next Upcoming Class</option>
+    </select>
+  </div>
+
+  <div id="course-list" class="course-list">
+    {{#courses}}
+      <div class="course-item" data-next-class="{{nextClass.timestamp}}">
+        <a href="/courses/{{_id}}" class="course-overlay-link" aria-label="View {{title}} course page"></a>
+        <img class="course-img" src="{{image}}" alt="{{title}}" />
+        <div class="course-details">
+          <h2>{{title}}</h2>
+          <p><strong>Type:</strong> {{type}}</p>
+          <p><strong>Duration:</strong> {{duration}}</p>
+          <p><strong>Description:</strong> {{description}}</p>
+
+          {{#nextClass}}
+            <p class="next-class"><strong>Next Class:</strong> {{nextClass.date}} at {{nextClass.time}} ({{nextClass.location}})</p>
+          {{/nextClass}}
+        </div>
+
+        {{#isOrganiser}}
+          <div class="actions organiser-actions">
+            <a href="/courses/{{_id}}?edit=true" class="button small">Edit Course</a>
+          </div>
+        {{/isOrganiser}}
+
+        {{^isOrganiser}}
+          <div class="actions guest-actions">
+            <a href="/courses/{{_id}}" class="button small">View & Book Classes</a>
+          </div>
+        {{/isOrganiser}}
+
+      </div>
+
+    {{/courses}}
+  </div>
+
+
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('toggleAddCourse');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      const form = document.getElementById('add-course-form');
+      form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    });
+  }
+
+  const sortSelect = document.getElementById('sort-select');
+  const list = document.getElementById('course-list');
+
+  const sortCourses = (sortType) => {
+    const items = Array.from(list.querySelectorAll('.course-item'));
+
+    if (sortType === 'upcoming') {
+      items.sort((a, b) => {
+        const aTime = parseInt(a.dataset.nextClass || 0);
+        const bTime = parseInt(b.dataset.nextClass || 0);
+        if (!aTime && !bTime) return 0;
+        if (!aTime) return 1;
+        if (!bTime) return -1;
+        return aTime - bTime;
+      });
+    } else {
+      items.sort((a, b) => {
+        const aTitle = a.querySelector('h2').textContent.trim();
+        const bTitle = b.querySelector('h2').textContent.trim();
+        return aTitle.localeCompare(bTitle);
+      });
+    }
+
+    list.innerHTML = '';
+    items.forEach(item => list.appendChild(item));
+  };
+
+  sortSelect.addEventListener('change', function () {
+    sortCourses(this.value);
+  });
+
+  sortCourses(sortSelect.value);
+
+</script>
+
+

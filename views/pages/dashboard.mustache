@@ -1,0 +1,80 @@
+{{> header }}
+
+<div class="dashboard-container">
+  <div class="welcome-text">
+    <h1 class="hero-title">Welcome to DanceHub</h1>
+    <p class="hero-subtitle">Explore exciting dance courses designed for all skill levels.</p>
+  </div>
+
+  <div class="carousel-header">
+    <h2 class="section-title">Featured Courses</h2>
+    <a href="/courses" class="button">View All Courses</a>
+  </div>
+
+  <div class="carousel-wrapper">
+    <button class="carousel-btn prev">&#10094;</button>
+
+    <div class="carousel-container">
+      <div class="carousel-track">
+        {{#courses}}
+          <div class="carousel-card">
+            <img class="carousel-card-img" src="{{image}}" alt="{{title}}" />
+            <div class="carousel-card-body">
+              <h3>{{title}}</h3>
+              <p class="carousel-description">{{description}}</p>
+              <div class="carousel-actions">
+                <a href="/courses/{{_id}}" class="button small">View</a>
+              </div>
+            </div>
+          </div>
+        {{/courses}}
+      </div>
+    </div>
+
+    <button class="carousel-btn next">&#10095;</button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const track = document.querySelector('.carousel-track');
+    const items = document.querySelectorAll('.carousel-card');
+    const prevBtn = document.querySelector('.carousel-btn.prev');
+    const nextBtn = document.querySelector('.carousel-btn.next');
+    const container = document.querySelector('.carousel-container');
+
+    let index = 0;
+    let visible = calculateVisible();
+    const total = items.length;
+
+    function calculateVisible() {
+      const containerWidth = container.offsetWidth;
+      const itemWidth = items[0].offsetWidth + 24;
+      return Math.floor(containerWidth / itemWidth) || 1;
+    }
+
+    function updateCarousel() {
+      visible = calculateVisible();
+      const itemWidth = items[0].offsetWidth + 24;
+      index = Math.min(index, total - visible);
+      track.style.transform = `translateX(-${index * itemWidth}px)`;
+    }
+
+    prevBtn.addEventListener('click', () => {
+      index = Math.max(index - 1, 0);
+      updateCarousel();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      index = Math.min(index + 1, total - visible);
+      updateCarousel();
+    });
+
+    window.addEventListener('resize', () => {
+      updateCarousel();
+    });
+
+    updateCarousel(); // initial run
+  });
+</script>
+

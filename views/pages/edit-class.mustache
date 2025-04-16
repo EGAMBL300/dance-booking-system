@@ -1,0 +1,13 @@
+{{> header }}
+
+<h2>Edit Class</h2>
+
+<form method="POST" action="/dashboard/classes/{{classData._id}}/edit">
+  <input name="date" type="date" value="{{classData.date}}" required />
+  <input name="time" type="time" value="{{classData.time}}" required />
+  <input name="location" value="{{classData.location}}" placeholder="Location" required />
+  <input name="price" type="number" step="0.01" value="{{classData.price}}" placeholder="Price" required />
+  <button type="submit">Update Class</button>
+</form>
+
+<a href="/dashboard/courses/{{classData.courseId}}/classes">← Back to Class List</a>
