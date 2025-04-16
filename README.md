@@ -2,6 +2,10 @@
 
 DanceHub is a Node.js web application that allows users to browse and book dance courses and classes. It also provides organiser-level access for managing courses, classes, attendees, and other organisers.
 
+## Live Demo
+
+Check out the live version of DanceHub here: [https://dancehub.onrender.com](https://dancehub.onrender.com)
+
 ## Summary
 
 This application was developed using:
